@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ToDo List</title>
     <script type="module" src="./js/main.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
   </head>
   <body>
+    <div class="message" id="toast"></div>
+
     <nav class="navbar bg-body-tertiary border-bottom">
       <div class="container-fluid">
         <a class="navbar-brand">ToDo List</a>
@@ -37,6 +43,7 @@
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
+            <i class="fa fa-plus-square"></i>
             Add
           </button>
         </div>
@@ -62,12 +69,23 @@
             ></button>
           </div>
           <div class="modal-body">
+            <input
+              type="text"
+              class="w-100 p-2"
+              placeholder="Title..."
+              name=""
+              id="tasktitelText"
+            />
+            <p class="text-danger d-none" id="errorTitle">Please Enter Title</p>
             <textarea
               name=""
-              id="task-details-text"
-              class="w-100 p-2"
+              id="taskdetailsText"
+              class="w-100 p-2 mt-2"
               placeholder="Enter Details..."
             ></textarea>
+            <p class="text-danger d-none" id="errorDetails">
+              Please Enter Details.
+            </p>
           </div>
           <div class="modal-footer">
             <button
@@ -84,109 +102,90 @@
     </div>
 
     <div class="container">
-      <h3>Your Tasks</h3>
+      <h3 class="mb-3 d-none" id="taskHeading">Your Tasks</h3>
 
-      <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </p>
-              <button type="button" class="btn btn-success">
-                Mark as Completed
-              </button>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </p>
-              <button type="button" class="btn btn-success">
-                Mark as Completed
-              </button>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content.
-              </p>
-              <button type="button" class="btn btn-success">
-                Mark as Completed
-              </button>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </p>
-              <button type="button" class="btn btn-success">
-                Mark as Completed
-              </button>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
-            </div>
-          </div>
-        </div>
+      <div
+        class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"
+        id="pendingTasks"
+      >
+        <!-- cards appear here -->
       </div>
     </div>
 
     <div class="container mt-3 mb-3">
-      <h3>Completed</h3>
+      <h3 class="mb-3 d-none" id="completeHeading">Completed</h3>
 
-      <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </p>
-              <button type="button" class="btn btn-primary">
-                Mark as not Completed 
-              </button>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
-            </div>
-          </div>
-        </div>
+      <div
+        class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"
+        id="completeCard"
+      >
+        <!-- card appear here -->
       </div>
     </div>
+
+
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm Delete</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>If deleted the task will not be recovered and permanently lost.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="deleteButton" onclick="confirmDel()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </body>
+  <script>
+    function statusChange(a) {
+      let data = JSON.parse(localStorage.getItem(a));
+      if (data.status == "Pending") {
+        const dataToStore = {
+          titel: a,
+          details: data.details,
+          status: "Completed",
+          timestamp: Date.now(),
+        };
+
+        localStorage.setItem(a, JSON.stringify(dataToStore));
+      }
+      else{
+        const dataToStore = {
+        titel: a,
+        details: data.details,
+        status: "Pending",
+        timestamp: Date.now(),
+      };
+
+      localStorage.setItem(a, JSON.stringify(dataToStore));
+      }
+      window.location.reload();
+    }
+
+    function deleteTask(uid){
+      let delBtn = document.getElementById("deleteButton")
+      delBtn.setAttribute('data-id',uid)
+    }
+
+    function confirmDel(){
+      let delBtn = document.getElementById("deleteButton");
+      let uid = delBtn.getAttribute("data-id")
+      localStorage.removeItem(uid)
+
+      let delModal = document.getElementById("staticBackdrop");
+      document.querySelector(".modal-backdrop").style.display = 'none'
+      delModal.style.display = 'none';
+
+      window.location.reload()
+    }
+  </script>
 </html>

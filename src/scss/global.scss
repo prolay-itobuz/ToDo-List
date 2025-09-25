@@ -5,3 +5,32 @@
 *{
     box-sizing: border-box;
 }
+
+
+.modal-body{
+    input,textarea{
+        border: 1px solid #d4cdcd;
+    }
+}
+
+div.message{
+    color: #eee;
+    padding: 10px;
+    position: absolute;
+    top: 70px;
+    z-index: 100;
+    border-radius: 10px;
+    animation: toast 500ms forwards;
+    display: none;
+}
+
+@keyframes toast{
+    from{
+        transform: translateX(100%);
+        right: -100px;
+    }
+    to{
+        transform: translateX(100%,50%);
+        right: 20px;
+    }
+}
