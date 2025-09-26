@@ -58,7 +58,7 @@ for (let i = 0; i < localStorage.length; i++) {
   let old = parseInt((Date.now() - val.timestamp) / 1000 / 60, 10);
 
   if (val.status == "Pending") {
-    taskHeading.classList.remove("d-none")
+    taskHeading.classList.remove("d-none");
     pendingCard.innerHTML += ` <div class="col">
           <div class="card h-100">
              <div class="card-header">
@@ -71,14 +71,14 @@ for (let i = 0; i < localStorage.length; i++) {
               </p>
 
              <button type="button" class="btn btn-success" onclick="statusChange('${val.titel}')"><i class="fa fa-check-square"></i></button>
-             <button type="button" class="btn btn-primary"><i class='fa fa-edit'></i></button>
+             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editData" onclick="editModal('${val.titel}')"><i class='fa fa-edit'></i></button>
               <button type="button" class="btn btn-danger" data-bs-toggle="modal" onclick = "deleteTask('${val.titel}')" data-bs-target="#staticBackdrop"><i class="fa fa-trash-o"></i></button>
             </div>
            
           </div>
         </div>`;
   } else {
-    completeHeading.classList.remove("d-none")
+    completeHeading.classList.remove("d-none");
     completeCard.innerHTML += `<div class="col">
           <div class="card h-100">
              <div class="card-header">
@@ -101,3 +101,28 @@ for (let i = 0; i < localStorage.length; i++) {
         </div>`;
   }
 }
+
+document
+  .getElementById("editData")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    let mss = document.getElementById("errorEdit");
+    let editDetails = document.getElementById("editDetails");
+    let editTitle = document.getElementById("editTitle")
+
+    if (editDetails.value) {
+        const dataToStore = {
+          titel: editTitle.value,
+          details: editDetails.value,
+          status: "Pending",
+          timestamp: Date.now(),
+        };
+        localStorage.setItem(editTitle.value, JSON.stringify(dataToStore));
+        window.location.reload();
+    } else {
+      mss.classList.remove("d-none");
+      editDetails.style.border = "1px solid red";
+    }
+  });
+

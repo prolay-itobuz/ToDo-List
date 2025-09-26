@@ -16,15 +16,6 @@
     <nav class="navbar bg-body-tertiary border-bottom">
       <div class="container-fluid">
         <a class="navbar-brand">ToDo List</a>
-        <form class="d-flex" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search..."
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
       </div>
     </nav>
 
@@ -123,27 +114,82 @@
       </div>
     </div>
 
-
-
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm Delete</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>If deleted the task will not be recovered and permanently lost.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="deleteButton" onclick="confirmDel()">Delete</button>
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Confirm Delete
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              If deleted the task will not be recovered and permanently lost.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="deleteButton"
+              onclick="confirmDel()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-
+    <form class="modal fade" id="editData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editDataLabel">Edit Task</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="editBody">
+            
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </form>
   </body>
   <script>
     function statusChange(a) {
@@ -157,35 +203,60 @@
         };
 
         localStorage.setItem(a, JSON.stringify(dataToStore));
-      }
-      else{
+      } else {
         const dataToStore = {
-        titel: a,
-        details: data.details,
-        status: "Pending",
-        timestamp: Date.now(),
-      };
+          titel: a,
+          details: data.details,
+          status: "Pending",
+          timestamp: Date.now(),
+        };
 
-      localStorage.setItem(a, JSON.stringify(dataToStore));
+        localStorage.setItem(a, JSON.stringify(dataToStore));
       }
       window.location.reload();
     }
 
-    function deleteTask(uid){
-      let delBtn = document.getElementById("deleteButton")
-      delBtn.setAttribute('data-id',uid)
+    function deleteTask(uid) {
+      let delBtn = document.getElementById("deleteButton");
+      delBtn.setAttribute("data-id", uid);
     }
 
-    function confirmDel(){
+    function confirmDel() {
       let delBtn = document.getElementById("deleteButton");
-      let uid = delBtn.getAttribute("data-id")
-      localStorage.removeItem(uid)
+      let uid = delBtn.getAttribute("data-id");
+      localStorage.removeItem(uid);
 
       let delModal = document.getElementById("staticBackdrop");
-      document.querySelector(".modal-backdrop").style.display = 'none'
-      delModal.style.display = 'none';
+      document.querySelector(".modal-backdrop").style.display = "none";
+      delModal.style.display = "none";
 
-      window.location.reload()
+      window.location.reload();
+    }
+
+
+    function editModal(a){
+      let data = JSON.parse(localStorage.getItem(a))
+
+      let editmodalBody = document.getElementById("editBody")
+      editmodalBody.innerHTML = `<input
+              type="text"
+              class="w-100 p-2"
+              placeholder="Title..."
+              name=""
+              value = "${data.titel}"
+              id="editTitle"
+              disabled
+            />
+            <textarea
+              name=""
+              id="editDetails"
+              class="w-100 p-2 mt-2"
+              placeholder="Enter Details..."
+            >${data.details}</textarea>
+            <p class="text-danger d-none" id="error">
+              Please Enter Details.
+            </p>`;
+            
     }
   </script>
 </html>
